@@ -13,9 +13,9 @@ app.use(bodyParser.urlencoded({ extended: true })); // для приёма ве�
 mongoose.connect('mongodb://localhost:27017/news-explorer', {
   useNewUrlParser: true,
   useCreateIndex: true,
-  useFindAndModify: false
+  useFindAndModify: false,
 });
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
-})
+});

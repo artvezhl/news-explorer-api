@@ -7,7 +7,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    //
     validate: {
       validator(email) {
         return validator.isEmail(email);
@@ -44,4 +43,3 @@ userSchema.statics.findUserByCredentials = async function (email, password) {
 
 // создание модели пользователя
 module.exports = mongoose.model('user', userSchema);
-
