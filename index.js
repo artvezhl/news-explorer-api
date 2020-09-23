@@ -1,7 +1,21 @@
-const http = require('http');
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 
-const server = http.createServer(() => {
-  console.log('Here we are!!!')
-}); // создаём сервер
+const { PORT = 3000 } = process.env;
 
-server.listen(3000); // будем принимать сообщения с 3000 порта
+const app = express();
+
+app.use(bodyParser.json()); // для собирания JSON-формата
+app.use(bodyParser.urlencoded({ extended: true })); // для приёма веб-страниц внутри POST-запроса
+
+// подключаемся к серверу mongo
+mongoose.connect('mongodb://localhost:27017/news-explorer', {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useFindAndModify: false
+});
+
+app.listen(PORT, () => {
+  console.log(`App listening on port ${PORT}`);
+})
