@@ -24,24 +24,25 @@ const articleSchema = new mongoose.Schema({
   },
   link: {
     type: String,
-    required: true,
     validate: {
       validator(link) {
-        return validator.isUrl(link);
+        return validator.isURL(link);
       },
     },
+    required: true,
   },
   image: {
     type: String,
     required: true,
     validate: {
-      validator(link) {
-        return validator.isUrl(link);
+      validator(image) {
+        return validator.isURL(image);
       },
     },
   },
   owner: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user',
     required: true,
     select: false,
   },
