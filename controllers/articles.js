@@ -32,18 +32,10 @@ module.exports.createArticle = async (req, res) => {
 // удаление карточки
 module.exports.removeArticle = async (req, res) => {
   try {
-    // TODO check cardId!?
-    const article = await Article.findById(req.params.cardId);
-    let articleToRemove;
-    if (req.user._id.toString() !== article.owner.toString()) {
-      // TODO check is need it?
-      res.status(403).send({ message: `У Вас отсутствуют права на удаление карточки ${req.params.cardId}` });
-    } else {
-      articleToRemove = await Article.findByIdAndRemove(req.params.cardId);
-      if (articleToRemove === null) {
-        res.status(404).send({ message: `Статья с номером ${req.params.cardId} отсутствует` });
-        return;
-      }
+    const articleToRemove = await Article.findByIdAndRemove(req.params.articleId);
+    if (articleToRemove === null) {
+      res.status(404).send({ message: `Статья с номером ${req.params.articleId} отсутствует` });
+      return;
     }
     res.send(articleToRemove);
   } catch (err) {

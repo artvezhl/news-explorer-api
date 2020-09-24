@@ -19,14 +19,13 @@ module.exports.getProfileInfo = async (req, res) => {
       const { email, name } = object;
 
       return { email, name };
-    }
+    };
 
     res.send(data(user));
   } catch (err) {
     // TODO think about next error
     if (err.name === 'CastError') {
       res.status(400).send({ message: `Пользователь с номером ${req.user._id} отсутствует` });
-      return;
     }
   }
 };
