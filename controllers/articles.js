@@ -33,8 +33,8 @@ module.exports.createArticle = async (req, res, next) => {
 // удаление карточки
 module.exports.removeArticle = async (req, res, next) => {
   try {
-    let articleToRemove = await Article.findById(req.params.articleId);
-    if (req.user._id === articleToRemove.owner) {
+    let articleToRemove = await Article.findById(req.params.articleId).select('+owner');
+    if (req.user._id.toString() === articleToRemove.owner.toString()) {
       articleToRemove = await Article.findByIdAndRemove(req.params.articleId);
     } else {
       res.status(401).send({ message: 'У Вас нет прав на удаление этой статьи' });
@@ -47,7 +47,7 @@ module.exports.removeArticle = async (req, res, next) => {
     res.send(articleToRemove);
   } catch (err) {
     if (err.name === 'CastError') {
-      res.status(400).send({ message: `Номер ${req.params.cardId} не является валидным` });
+      res.status(400).send({ message: 'Id статьи не является валидным' });
       return;
     }
     next(err);
