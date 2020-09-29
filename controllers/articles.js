@@ -33,7 +33,13 @@ module.exports.createArticle = async (req, res, next) => {
 // удаление карточки
 module.exports.removeArticle = async (req, res, next) => {
   try {
-    const articleToRemove = await Article.findByIdAndRemove(req.params.articleId);
+    let articleToRemove = await Article.findById(req.params.articleId);
+    if (req.user._id === articleToRemove.owner) {
+      articleToRemove = await Article.findByIdAndRemove(req.params.articleId);
+    } else {
+      res.status(401).send({ message: 'У Вас нет прав на удаление этой статьи' });
+      return;
+    }
     if (articleToRemove === null) {
       res.status(404).send({ message: `Статья с номером ${req.params.articleId} отсутствует` });
       return;
