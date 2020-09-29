@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
-    required: true,
+    required: [true, 'Поле "Электронна почта" является обязательным'],
     unique: true,
     validate: {
       validator(email) {
@@ -15,14 +15,15 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    required: [true, 'Поле "Пароль" является обязательным'],
+    minlength: [8, 'В поле "Пароль" должно быть не менее 8 символов'],
     select: false,
   },
   name: {
     type: String,
     minlength: [2, 'В поле "Имя" должно быть не менее 2 символов'],
     maxlength: [30, 'В поле "Имя" должно быть не более 30 символов'],
-    required: [true, 'Поле "Имя" не является валидным. В нем должно быть от 2 до 30 символов'],
+    required: [true, 'Поле "Имя" является обязательным'],
   },
 });
 

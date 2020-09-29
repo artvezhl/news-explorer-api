@@ -3,7 +3,8 @@ const Article = require('../models/article');
 // возврат всех карточек
 module.exports.getArticles = async (req, res) => {
   try {
-    const articles = await Article.find({});
+    const articles = await Article.find({ owner: req.user._id });
+
     res.send(articles);
   } catch (err) {
     res.status(500).send({ message: 'На сервере произошла ошибка' });
@@ -11,7 +12,7 @@ module.exports.getArticles = async (req, res) => {
 };
 
 // создание карточки
-module.exports.createArticle = async (req, res) => {
+module.exports.createArticle = async (req, res, next) => {
   const {
     keyword, title, text, date, source, link, image,
   } = req.body;
@@ -25,12 +26,12 @@ module.exports.createArticle = async (req, res) => {
       res.status(400).send(err.message);
       return;
     }
-    res.status(500).send({ message: 'На сервере произошла ошибка' });
+    next(err);
   }
 };
 
 // удаление карточки
-module.exports.removeArticle = async (req, res) => {
+module.exports.removeArticle = async (req, res, next) => {
   try {
     const articleToRemove = await Article.findByIdAndRemove(req.params.articleId);
     if (articleToRemove === null) {
@@ -43,6 +44,6 @@ module.exports.removeArticle = async (req, res) => {
       res.status(400).send({ message: `Номер ${req.params.cardId} не является валидным` });
       return;
     }
-    res.status(500).send({ message: 'На сервере произошла ошибка' });
+    next(err);
   }
 };

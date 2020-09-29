@@ -3,35 +3,21 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
-const userErrorsHandler = require('../utils/helpers');
+const { userErrorsHandler, userDataReturner } = require('../utils/helpers');
 
 // возврат информации о пользователе
-module.exports.getProfileInfo = async (req, res) => {
+module.exports.getProfileInfo = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id);
-    // TODO think about next error
-    if (user === null) {
-      res.status(404).send({ message: `Пользователь с номером ${req.user._id} отсутствует` });
-      return;
-    }
 
-    const data = (object) => {
-      const { email, name } = object;
-
-      return { email, name };
-    };
-
-    res.send(data(user));
+    res.send(userDataReturner(user));
   } catch (err) {
-    // TODO think about next error
-    if (err.name === 'CastError') {
-      res.status(400).send({ message: `Пользователь с номером ${req.user._id} отсутствует` });
-    }
+    next(err);
   }
 };
 
 // создание нового пользователя
-module.exports.createUser = async (req, res) => {
+module.exports.createUser = async (req, res, next) => {
   try {
     const {
       email, name,
@@ -48,24 +34,14 @@ module.exports.createUser = async (req, res) => {
       email, password, name,
     });
 
-    const data = (object) => {
-      const {
-        email, name, ...rest
-      } = object;
-
-      return {
-        email, name,
-      };
-    };
-
-    res.send(data(newUser));
+    res.status(201).send(userDataReturner(newUser));
   } catch (err) {
-    userErrorsHandler(err, res);
+    userErrorsHandler(err, res, next);
   }
 };
 
 // контроллер login
-module.exports.login = async (req, res) => {
+module.exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const foundUser = await User.findUserByCredentials(email, password);
@@ -82,9 +58,10 @@ module.exports.login = async (req, res) => {
         sameSite: true,
       })
       .end(token);
-  } catch (err) {
-    res
-      .status(401)
-      .send({ message: err.message });
+  } catch (e) {
+    const err = new Error('Необходима авторизация');
+    err.statusCode = 401;
+
+    next(err);
   }
 };

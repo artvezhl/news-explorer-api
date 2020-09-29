@@ -1,11 +1,25 @@
-module.exports = (err, res) => {
-  if (err.name === 'ValidationError') {
-    res.status(400).send(err.message);
-    return;
+const validator = require('validator');
+
+const userErrorsHandler = (e, res, next) => {
+  let err;
+  if (e.name === 'ValidationError' || e.name === 'CastError') {
+    err = new Error(e.message);
+    err.statusCode = 400;
   }
-  if (err.code === 11000) {
-    res.status(409).send({ message: 'Пользователь с такой почтой уже есть зарегистрирован' });
-    return;
+  if (e.code === 11000) {
+    err = new Error('Пользователь с такой почтой уже есть зарегистрирован');
+    err.statusCode = 409;
   }
-  res.status(500).send({ message: 'На сервере произошла ошибка' });
+  next(err);
+};
+
+const userDataReturner = (object) => {
+  const { email, name } = object;
+
+  return { email, name };
+};
+
+module.exports = {
+  userErrorsHandler,
+  userDataReturner,
 };
