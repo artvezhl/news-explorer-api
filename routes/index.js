@@ -5,9 +5,10 @@ const usersRouter = require('./users');
 const articlesRouter = require('./articles');
 const { login, createUser } = require('../controllers/users');
 const { validateSignin, validateSignup } = require('../middlewares/validations');
+const checkPassword = require('../middlewares/check-password');
 
-router.post('/signin', validateSignin, login);
-router.post('/signup', validateSignup, createUser);
+router.post('/signin', validateSignin, checkPassword, login);
+router.post('/signup', validateSignup, checkPassword, createUser);
 router.use(auth);
 router.use('/users', usersRouter);
 router.use('/articles', articlesRouter);
