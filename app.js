@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const { errors } = require('celebrate');
+const { celebrateErrorsHandler } = require('./middlewares/validations');
 require('dotenv').config();
 
 const { PORT = 3000 } = process.env;
@@ -35,7 +35,7 @@ app.use(routes);
 app.use(errorLogger);
 
 // обработчики ошибок celebrate
-app.use(errors());
+app.use(celebrateErrorsHandler);
 
 // обработчик ошибок
 app.use(commonErrorsHandler);

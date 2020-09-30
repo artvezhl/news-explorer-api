@@ -1,25 +1,24 @@
-const { Joi, celebrate } = require('celebrate');
+const { Joi, celebrate, isCelebrateError } = require('celebrate');
 const validator = require('validator');
 
 const validateSignup = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email()
       .messages({
-        'string.empty': 'Поле "email" должно быть заполнено',
-        'string.email': 'Поле "email" должно быть валидным',
+        'string.empty': 'Поле email должно быть заполнено',
+        'string.email': 'Поле email должно быть валидным адресом электронной почты',
       }),
     password: Joi.string().required().min(8)
       .messages({
-        'string.min': 'В пароле должно быть не менее 8 символов',
-        'string.empty': 'Поле "пароль" должно быть заполнено',
+        'string.empty': 'Поле Пароль должно быть заполнено',
+        'string.min': 'В поле Пароль должно быть не менее 8 символов',
       }),
     name: Joi.string().required().min(2).max(30)
       .messages({
-        'string.empty': 'Поле "имя" должно быть заполнено',
-        'string.min': 'В пароле должно быть не менее 2 символов',
-        'string.max': 'В пароле должно быть не более 30 символов',
-      })
-    ,
+        'string.empty': 'Поле Имя должно быть заполнено',
+        'string.min': 'В поле Имя должно быть не менее 2 символов',
+        'string.max': 'В поле Имя должно быть не более 30 символов',
+      }),
   }),
 });
 
@@ -27,12 +26,13 @@ const validateSignin = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email()
       .messages({
-        'string.empty': 'Поле "email" должно быть заполнено',
+        'string.empty': 'Поле email должно быть заполнено',
+        'string.email': 'Поле email должно быть валидным адресом электронной почты',
       }),
     password: Joi.string().required().min(8)
       .messages({
-        'string.min': 'В пароле должно быть не менее 8 символов',
-        'string.empty': 'Поле "пароль" должно быть заполнено',
+        'string.empty': 'Поле Пароль должно быть заполнено',
+        'string.min': 'В поле Пароль должно быть не менее 8 символов',
       }),
   }),
 });
@@ -56,11 +56,25 @@ const validateArticleBody = celebrate({
       }
       return helpers.message('Поле "image" должно быть валидным url-адресом');
     }),
-  }),
+  })
+    .messages({
+      'string.empty': 'Поле {#label} должно быть заполнено',
+    }),
 });
+
+const celebrateErrorsHandler = (err, req, res, next) => {
+  if (isCelebrateError(err)) {
+    return res.status(400).send({
+      message: err.details.get('body').message.replace(/"/g, ''),
+    });
+  }
+
+  return next(err);
+};
 
 module.exports = {
   validateSignin,
   validateSignup,
   validateArticleBody,
+  celebrateErrorsHandler,
 };
