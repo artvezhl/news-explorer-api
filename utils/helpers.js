@@ -1,5 +1,3 @@
-const validator = require('validator');
-
 const userErrorsHandler = (e, res, next) => {
   let err;
   if (e.name === 'ValidationError' || e.name === 'CastError') {
