@@ -1,8 +1,9 @@
+const BadRequestError = require('../errors/bad-request-error');
+
 const userErrorsHandler = (e, res, next) => {
   let err;
   if (e.name === 'ValidationError' || e.name === 'CastError') {
-    err = new Error(e.message);
-    err.statusCode = 400;
+    err = new BadRequestError(e.message);
   }
   if (e.code === 11000) {
     err = new Error('Пользователь с такой почтой уже есть зарегистрирован');

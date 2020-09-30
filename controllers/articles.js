@@ -1,13 +1,16 @@
 const Article = require('../models/article');
+const { userErrorsHandler } = require('../utils/helpers');
+const BadRequestError = require('../errors/bad-request-error');
+const NotFoundError = require('../errors/not-found-err');
+const ForbiddenError = require('../errors/forbidden-error');
 
-// возврат всех карточек
-module.exports.getArticles = async (req, res) => {
+// возврат всех статей
+module.exports.getArticles = async (req, res, next) => {
   try {
     const articles = await Article.find({ owner: req.user._id });
-
     res.send(articles);
   } catch (err) {
-    res.status(500).send({ message: 'На сервере произошла ошибка' });
+    next();
   }
 };
 
@@ -22,11 +25,7 @@ module.exports.createArticle = async (req, res, next) => {
     });
     res.send(newArticle);
   } catch (err) {
-    if (err.name === 'ValidationError') {
-      res.status(400).send(err.message);
-      return;
-    }
-    next(err);
+    userErrorsHandler(err, res, next);
   }
 };
 
@@ -35,22 +34,19 @@ module.exports.removeArticle = async (req, res, next) => {
   try {
     let articleToRemove = await Article.findById(req.params.articleId).select('+owner')
       .orFail(() => {
-        const error = new Error('Статья с заданным Id отсутствует');
-        error.statusCode = 404;
-        throw Error;
+        throw new NotFoundError('Статья с заданным Id отсутствует');
       });
     if (req.user._id.toString() === articleToRemove.owner.toString()) {
       articleToRemove = await Article.findByIdAndRemove(req.params.articleId);
     } else {
-      res.status(401).send({ message: 'У Вас нет прав на удаление этой статьи' });
-      return;
+      throw new ForbiddenError('У Вас нет прав на удаление этой статьи');
     }
     res.send(articleToRemove);
   } catch (err) {
+    let error = err;
     if (err.name === 'CastError') {
-      res.status(400).send({ message: 'Id статьи не является валидным' });
-      return;
+      error = new BadRequestError('Id статьи не является валидным');
     }
-    next(err);
+    next(error);
   }
 };

@@ -62,7 +62,17 @@ const validateArticleBody = celebrate({
     }),
 });
 
+const validateArticleId = celebrate({
+  params: Joi.object().keys({
+    articleId: Joi.string().alphanum().hex(),
+  })
+    .messages({
+      'string.hex': 'Поле {#label} должно быть hex-строкой',
+    }),
+});
+
 const celebrateErrorsHandler = (err, req, res, next) => {
+  // console.log(err);
   if (isCelebrateError(err)) {
     return res.status(400).send({
       message: err.details.get('body').message.replace(/"/g, ''),
@@ -76,5 +86,6 @@ module.exports = {
   validateSignin,
   validateSignup,
   validateArticleBody,
+  validateArticleId,
   celebrateErrorsHandler,
 };
