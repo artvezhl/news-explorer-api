@@ -23,7 +23,9 @@ module.exports.createArticle = async (req, res, next) => {
     const newArticle = await Article.create({
       keyword, title, text, date, source, link, image, owner: req.user._id,
     });
-    res.send(newArticle);
+    res
+      .status(201)
+      .send(newArticle);
   } catch (err) {
     userErrorsHandler(err, res, next);
   }

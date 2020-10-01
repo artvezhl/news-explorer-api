@@ -4,6 +4,7 @@ const User = require('../models/user');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 const { userErrorsHandler, userDataReturner } = require('../utils/helpers');
+const BadRequestError = require('../errors/bad-request-error');
 
 // возврат информации о пользователе
 module.exports.getProfileInfo = async (req, res, next) => {
@@ -27,21 +28,26 @@ module.exports.createUser = async (req, res, next) => {
     if (req.body.password) {
       passwordLength = req.body.password.split(' ').join('').length;
     }
+    console.log(passwordLength);
     if (passwordLength > 7) {
       password = await bcrypt.hash(req.body.password, 10);
+    } else {
+      throw new BadRequestError('В поле "Пароль" должно быть не менее 8 символов');
     }
     const newUser = await User.create({
       email, password, name,
     });
 
-    res.status(201).send(userDataReturner(newUser));
+    res
+      .status(201)
+      .send(userDataReturner(newUser));
   } catch (err) {
     userErrorsHandler(err, res, next);
   }
 };
 
 // контроллер login
-module.exports.login = async (req, res, next) => {
+module.exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const foundUser = await User.findUserByCredentials(email, password);
@@ -58,10 +64,9 @@ module.exports.login = async (req, res, next) => {
         sameSite: true,
       })
       .end(token);
-  } catch (e) {
-    const err = new Error('Необходима авторизация');
-    err.statusCode = 401;
-
-    next(err);
+  } catch (err) {
+    res
+      .status(401)
+      .send({ message: err.message });
   }
 };

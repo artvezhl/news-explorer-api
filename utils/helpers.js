@@ -1,7 +1,8 @@
 const BadRequestError = require('../errors/bad-request-error');
 
 const userErrorsHandler = (e, res, next) => {
-  let err;
+  console.log(e);
+  let err = e;
   if (e.name === 'ValidationError' || e.name === 'CastError') {
     err = new BadRequestError(e.message);
   }

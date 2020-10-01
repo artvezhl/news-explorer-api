@@ -14,7 +14,6 @@ const commonErrorsHandler = require('./middlewares/error-handler');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// TODO проверить Eslint
 // подключение к Mongo
 mongoose.connect('mongodb://localhost:27017/news-explorer', {
   useNewUrlParser: true,
