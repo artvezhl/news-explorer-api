@@ -72,10 +72,14 @@ const validateArticleId = celebrate({
 });
 
 const celebrateErrorsHandler = (err, req, res, next) => {
-  // console.log(err);
-  if (isCelebrateError(err)) {
+  if (isCelebrateError(err) && err.details.get('body')) {
     return res.status(400).send({
       message: err.details.get('body').message.replace(/"/g, ''),
+    });
+  }
+  if (isCelebrateError(err) && err.details.get('params')) {
+    return res.status(400).send({
+      message: err.details.get('params').message.replace(/"/g, ''),
     });
   }
 
