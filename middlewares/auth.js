@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const messages = require('../constants');
 
 const { JWT_SECRET = 'dev-secret' } = process.env;
 module.exports = (req, res, next) => {
@@ -10,7 +11,7 @@ module.exports = (req, res, next) => {
   } catch (err) {
     return res
       .status(401)
-      .send({ message: 'Необходима авторизация' });
+      .send({ message: messages.unAuthorized });
   }
 
   req.user = payload;

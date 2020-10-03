@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const messages = require('../constants');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 const { userErrorsHandler, userDataReturner } = require('../utils/helpers');
@@ -28,11 +29,10 @@ module.exports.createUser = async (req, res, next) => {
     if (req.body.password) {
       passwordLength = req.body.password.split(' ').join('').length;
     }
-    console.log(passwordLength);
     if (passwordLength > 7) {
       password = await bcrypt.hash(req.body.password, 10);
     } else {
-      throw new BadRequestError('В поле "Пароль" должно быть не менее 8 символов');
+      throw new BadRequestError(messages.passMinLength);
     }
     const newUser = await User.create({
       email, password, name,
@@ -47,7 +47,7 @@ module.exports.createUser = async (req, res, next) => {
 };
 
 // контроллер login
-module.exports.login = async (req, res) => {
+module.exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const foundUser = await User.findUserByCredentials(email, password);
@@ -65,8 +65,6 @@ module.exports.login = async (req, res) => {
       })
       .end(token);
   } catch (err) {
-    res
-      .status(401)
-      .send({ message: err.message });
+    userErrorsHandler(err, res, next);
   }
 };

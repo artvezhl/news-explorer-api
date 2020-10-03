@@ -1,14 +1,14 @@
 const BadRequestError = require('../errors/bad-request-error');
+const ConflictError = require('../errors/conflict-error');
+const messages = require('../constants');
 
 const userErrorsHandler = (e, res, next) => {
-  console.log(e);
   let err = e;
   if (e.name === 'ValidationError' || e.name === 'CastError') {
     err = new BadRequestError(e.message);
   }
   if (e.code === 11000) {
-    err = new Error('Пользователь с такой почтой уже есть зарегистрирован');
-    err.statusCode = 409;
+    err = new ConflictError(messages.emailRepeat);
   }
   next(err);
 };

@@ -1,10 +1,10 @@
-// TODO разобраться почему не работает данный мидлвар
+const messages = require('../constants');
+const BadRequestError = require('../errors/bad-request-error');
+
 module.exports = (req, res, next) => {
-  console.log('password');
   const { password } = req.body;
   if (!password || !password.trim()) {
-    res.status(400)
-      .send({ message: 'Поле "пароль" должно быть заполнено' });
+    throw new BadRequestError(messages.passEmpty);
   } else {
     next();
   }

@@ -3,6 +3,7 @@ const { userErrorsHandler } = require('../utils/helpers');
 const BadRequestError = require('../errors/bad-request-error');
 const NotFoundError = require('../errors/not-found-err');
 const ForbiddenError = require('../errors/forbidden-error');
+const messages = require('../constants');
 
 // возврат всех статей
 module.exports.getArticles = async (req, res, next) => {
@@ -36,18 +37,18 @@ module.exports.removeArticle = async (req, res, next) => {
   try {
     let articleToRemove = await Article.findById(req.params.articleId).select('+owner')
       .orFail(() => {
-        throw new NotFoundError('Статья с заданным Id отсутствует');
+        throw new NotFoundError(messages.noArticleId);
       });
     if (req.user._id.toString() === articleToRemove.owner.toString()) {
       articleToRemove = await Article.findByIdAndRemove(req.params.articleId);
     } else {
-      throw new ForbiddenError('У Вас нет прав на удаление этой статьи');
+      throw new ForbiddenError(messages.noRightsToRemoveArticle);
     }
     res.send(articleToRemove);
   } catch (err) {
     let error = err;
     if (err.name === 'CastError') {
-      error = new BadRequestError('Id статьи не является валидным');
+      error = new BadRequestError(messages.invalidId);
     }
     next(error);
   }

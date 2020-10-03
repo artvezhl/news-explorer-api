@@ -1,23 +1,24 @@
 const { Joi, celebrate, isCelebrateError } = require('celebrate');
 const validator = require('validator');
+const messages = require('../constants');
 
 const validateSignup = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email()
       .messages({
-        'string.empty': 'Поле email должно быть заполнено',
-        'string.email': 'Поле email должно быть валидным адресом электронной почты',
+        'string.empty': messages.emailEmpty,
+        'string.email': messages.invalidEmail,
       }),
     password: Joi.string().required().min(8)
       .messages({
-        'string.empty': 'Поле Пароль должно быть заполнено',
-        'string.min': 'В поле Пароль должно быть не менее 8 символов',
+        'string.empty': messages.passEmpty,
+        'string.min': messages.passMinLength,
       }),
     name: Joi.string().required().min(2).max(30)
       .messages({
-        'string.empty': 'Поле Имя должно быть заполнено',
-        'string.min': 'В поле Имя должно быть не менее 2 символов',
-        'string.max': 'В поле Имя должно быть не более 30 символов',
+        'string.empty': messages.nameEmpty,
+        'string.min': messages.nameMinLength,
+        'string.max': messages.nameMaxLength,
       }),
   }),
 });
@@ -26,13 +27,13 @@ const validateSignin = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email()
       .messages({
-        'string.empty': 'Поле email должно быть заполнено',
-        'string.email': 'Поле email должно быть валидным адресом электронной почты',
+        'string.empty': messages.emailEmpty,
+        'string.email': messages.invalidEmail,
       }),
     password: Joi.string().required().min(8)
       .messages({
-        'string.empty': 'Поле Пароль должно быть заполнено',
-        'string.min': 'В поле Пароль должно быть не менее 8 символов',
+        'string.empty': messages.passEmpty,
+        'string.min': messages.passMinLength,
       }),
   }),
 });
@@ -48,13 +49,13 @@ const validateArticleBody = celebrate({
       if (validator.isURL(value)) {
         return value;
       }
-      return helpers.message('Поле "link" должно быть валидным url-адресом');
+      return helpers.message(messages.invalidLinkUrl);
     }),
     image: Joi.string().required().custom((value, helpers) => {
       if (validator.isURL(value)) {
         return value;
       }
-      return helpers.message('Поле "image" должно быть валидным url-адресом');
+      return helpers.message(messages.invalidImageUrl);
     }),
   })
     .messages({
@@ -67,7 +68,7 @@ const validateArticleId = celebrate({
     articleId: Joi.string().alphanum().hex(),
   })
     .messages({
-      'string.hex': 'Поле {#label} должно быть hex-строкой',
+      'string.hex': messages.invalidId,
     }),
 });
 
