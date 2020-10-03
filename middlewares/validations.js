@@ -49,17 +49,17 @@ const validateArticleBody = celebrate({
       if (validator.isURL(value)) {
         return value;
       }
-      return helpers.message(messages.invalidLinkUrl);
+      return helpers.message(messages.invalidArticleData);
     }),
     image: Joi.string().required().custom((value, helpers) => {
       if (validator.isURL(value)) {
         return value;
       }
-      return helpers.message(messages.invalidImageUrl);
+      return helpers.message(messages.invalidArticleData);
     }),
   })
     .messages({
-      'string.empty': 'Поле {#label} должно быть заполнено',
+      'string.empty': messages.invalidArticleData,
     }),
 });
 
