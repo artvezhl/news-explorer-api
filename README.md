@@ -1,7 +1,7 @@
 # news-explorer-api
 Backend for Yandex Praktikum graduate program
 
-[Ссылка на проект](https://www.api.explore-news.ga/)
+Ссылка на проект - [https://www.api.explore-news.ga/](https://www.api.explore-news.ga/)
 
 ### В проекте реализованы роуты: 
 - GET /users/me, который возвращает информацию о пользователе (email и имя)
