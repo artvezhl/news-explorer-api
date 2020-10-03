@@ -11,6 +11,7 @@ const app = express();
 const routes = require('./routes');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const commonErrorsHandler = require('./middlewares/error-handler');
+const limiter = require('./utils/limiter');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -29,6 +30,8 @@ app.use(requestLogger);
 app.use(helmet());
 
 app.use(cookieParser());
+
+app.use(limiter);
 
 // роуты
 app.use(routes);
