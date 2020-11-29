@@ -1,10 +1,29 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { celebrateErrorsHandler } = require('./middlewares/validations');
 require('dotenv').config();
+
+const corsOptions = {
+  origin: [
+    'http://localhost:8080',
+  ],
+  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+  allowedHeaders: [
+    'Content-Type',
+    'origin',
+    'x-access-token',
+    'authorization',
+    'credentials',
+  ],
+  credentials: true,
+};
+
 const { PORT, MONGO_SERVER } = require('./config');
 
 const app = express();
@@ -23,6 +42,8 @@ mongoose.connect(MONGO_SERVER, {
   useFindAndModify: false,
   useUnifiedTopology: true,
 });
+
+app.use('*', cors(corsOptions));
 
 // подключение логгера запросов
 app.use(requestLogger);
