@@ -46,6 +46,22 @@ module.exports.createUser = async (req, res, next) => {
   }
 };
 
+// module.exports.login = (req, res, next) => {
+//   const { email, password } = req.body;
+//   return User.findUserByCredentials(email, password)
+//     .then((user) => {
+//       const token = jwt.sign({ _id: user._id },
+//         NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+//         { expiresIn: '7d' });
+//       res.cookie('jwt', token, {
+//         maxAge: 3600000 * 24 * 7,
+//         httpOnly: true,
+//       });
+//       return res.send({ token });
+//     })
+//     .catch(next);
+// };
+
 // контроллер login
 module.exports.login = async (req, res, next) => {
   try {
@@ -62,8 +78,8 @@ module.exports.login = async (req, res, next) => {
         maxAge: 3600000 * 24 * 7,
         httpOnly: true,
         sameSite: true,
-      })
-      .end(token);
+      });
+    return res.send({ token });
   } catch (err) {
     userErrorsHandler(err, res, next);
   }
