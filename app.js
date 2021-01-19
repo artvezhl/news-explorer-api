@@ -10,8 +10,8 @@ require('dotenv').config();
 const corsOptions = {
   origin: [
     'http://localhost:8080',
-    'diploma-web.tk',
-    'www.diploma-web.tk',
+    'http://diploma-web.tk',
+    'http://www.diploma-web.tk',
   ],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   preflightContinue: false,
