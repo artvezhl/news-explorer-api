@@ -11,7 +11,7 @@ const corsOptions = {
   origin: [
     'http://localhost:8080',
     'http://diploma-web.tk',
-    'http://www.diploma-web.tk',
+    'https://diploma-web.tk',
   ],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   preflightContinue: false,
