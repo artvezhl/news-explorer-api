@@ -53,7 +53,7 @@ mongoose.connect(MONGO_SERVER, {
   useUnifiedTopology: true,
 });
 
-// app.use('*', cors(corsOptions));
+app.use('*', cors(corsOptions));
 
 // подключение логгера запросов
 app.use(requestLogger);
