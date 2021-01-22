@@ -11,6 +11,8 @@ const whitelist = [
   'http://localhost:8080',
   'http://diploma-web.tk',
   'https://diploma-web.tk',
+  'http://www.diploma-web.tk',
+  'https://www.diploma-web.tk',
 ];
 
 const corsOptions = {
