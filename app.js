@@ -18,7 +18,7 @@ const whitelist = [
 ];
 
 const corsOptions = {
-  origin: '*',
+  origin: whitelist,
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   preflightContinue: false,
   optionsSuccessStatus: 204,
