@@ -25,6 +25,7 @@ const corsOptions = {
     'origin',
     'x-access-token',
     'access-control-allow-origin',
+    'authorization',
   ],
   credentials: true,
 };
