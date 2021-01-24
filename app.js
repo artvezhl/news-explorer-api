@@ -16,8 +16,8 @@ const whitelist = [
 ];
 
 const corsOptions = {
-  origin: (origin, callback) => {
-    if (whitelist.indexOf(origin) !== -1 || !origin) {
+  origin: (req, callback) => {
+    if (whitelist.indexOf(req.header('Origin')) !== -1) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -28,7 +28,7 @@ const corsOptions = {
   optionsSuccessStatus: 204,
   allowedHeaders: [
     'Content-Type',
-    'Access-Control-Allow-Origin',
+    'origin',
     'x-access-token',
     'authorization',
     'credentials',
