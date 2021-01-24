@@ -9,12 +9,10 @@ require('dotenv').config();
 
 const whitelist = [
   'http://localhost:8080',
-  'http://api.diploma-web.tk',
-  'https://api.diploma-web.tk',
-  'http://www.api.diploma-web.tk',
-  'https://www.api.diploma-web.tk',
-  'https://www.diploma-web.tk',
+  'http://diploma-web.tk',
+  'https://diploma-web.tk',
   'http://www.diploma-web.tk',
+  'https://www.diploma-web.tk',
 ];
 
 const corsOptions = {
