@@ -13,8 +13,8 @@ const whitelist = [
   'https://api.diploma-web.tk',
   'http://www.api.diploma-web.tk',
   'https://www.api.diploma-web.tk',
-  'https://www.diploma-web.tk/',
-  'http://www.diploma-web.tk/'
+  'https://www.diploma-web.tk',
+  'http://www.diploma-web.tk',
 ];
 
 const corsOptions = {
