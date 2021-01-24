@@ -7,34 +7,34 @@ const cookieParser = require('cookie-parser');
 const { celebrateErrorsHandler } = require('./middlewares/validations');
 require('dotenv').config();
 
-// const whitelist = [
-//   'http://localhost:8080',
-//   'http://diploma-web.tk',
-//   'https://diploma-web.tk',
-//   'http://www.diploma-web.tk',
-//   'https://www.diploma-web.tk',
-// ];
-//
-// const corsOptions = {
-//   origin: (origin, callback) => {
-//     if (whitelist.indexOf(origin) !== -1 || !origin) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error('Not allowed by CORS'));
-//     }
-//   },
-//   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
-//   preflightContinue: false,
-//   optionsSuccessStatus: 204,
-//   allowedHeaders: [
-//     'Content-Type',
-//     'origin',
-//     'x-access-token',
-//     'authorization',
-//     'credentials',
-//   ],
-//   credentials: true,
-// };
+const whitelist = [
+  'http://localhost:8080',
+  'http://api.diploma-web.tk',
+  'https://api.diploma-web.tk',
+  'http://www.api.diploma-web.tk',
+  'https://www.api.diploma-web.tk',
+];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (whitelist.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+  allowedHeaders: [
+    'Content-Type',
+    'origin',
+    'x-access-token',
+    'authorization',
+    'credentials',
+  ],
+  credentials: true,
+};
 
 const { PORT, MONGO_SERVER } = require('./config');
 
@@ -55,8 +55,7 @@ mongoose.connect(MONGO_SERVER, {
   useUnifiedTopology: true,
 });
 
-app.use(cors());
-// app.use('*', cors(corsOptions));
+app.use('*', cors(corsOptions));
 
 // подключение логгера запросов
 app.use(requestLogger);
