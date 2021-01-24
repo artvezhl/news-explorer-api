@@ -9,16 +9,18 @@ require('dotenv').config();
 
 const whitelist = [
   'http://localhost:8080',
-  'http://api.diploma-web.tk',
-  'https://api.diploma-web.tk',
-  'http://www.api.diploma-web.tk',
-  'https://www.api.diploma-web.tk',
   'https://www.diploma-web.tk',
   'http://www.diploma-web.tk',
 ];
 
 const corsOptions = {
-  origin: whitelist,
+  origin: (origin, callback) => {
+    if (whitelist.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   preflightContinue: false,
   optionsSuccessStatus: 204,
